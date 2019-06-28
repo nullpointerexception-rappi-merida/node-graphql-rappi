@@ -1,0 +1,33 @@
+type Query {
+    listUsers: [User]!
+}
+
+type Mutation {
+        createUser(data: createUserInput!): User!
+    login(email: String!, password: String): Auth!
+}
+
+type Auth {
+    token: String!
+    message: String!
+}
+
+type User {
+    _id: ID
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String
+    birthDate: String!
+    profilePicture: String
+    isActive: Boolean!
+}
+
+input createUserInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    birthDate: String
+    profilePicture: String
+}
