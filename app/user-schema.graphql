@@ -1,5 +1,7 @@
+directive @auth on FIELD_DEFINITION | FIELD 
+
 type Query {
-    listUsers: [User]!
+    listUsers: [User]! @auth
 }
 
 type Mutation {

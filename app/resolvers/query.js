@@ -5,4 +5,6 @@ const listUsers = async (root, params, context, info) => {
 	return await UserModel.find();
 };
 
-module.exports = { listUsers };
+module.exports = { 
+	listUsers 
+};

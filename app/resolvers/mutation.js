@@ -14,15 +14,13 @@ const createUser = async (root, params, context, info) => {
 	return newUser.toObject();
 };
 
-const login = async (root, params, context, info) => {
-	const token = await authenticate(params)
-		.catch(e => {
-			throw e;
-		});
+const login = async(root, params, context, info) => {
+	const token = await authenticate(params).catch(e => { throw e;});
 	return {
 		token,
-		message: 'Ok'
+		message: 'OK'
 	};
 };
+
 
 module.exports = { createUser, login };

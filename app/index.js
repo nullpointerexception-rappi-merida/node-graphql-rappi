@@ -8,6 +8,9 @@ const mongoose = require('mongoose');
 
 const resolvers = require('./resolvers');
 
+//Auth
+const { AuthDirective } = require('./resolvers/directives');
+const { verifyToken } = require('./utils/verifyToken');
 
 // our own definitions
 const typeDefs = importSchema('./app/user-schema.graphql');
@@ -18,7 +21,14 @@ const mongo = mongoose.connection;
 mongo.on('error', (error) => console.log('error is: ', error))
 	.once('open', () => console.log('Connected to database'));
 
-const server = new GraphQLServer({ typeDefs, resolvers });
+const server = new GraphQLServer({ 
+	typeDefs, 
+	resolvers,
+	schemaDirectives: {
+		auth: AuthDirective
+	},
+	context: async({request}) => verifyToken(request)
+});
 
 server.start()
 	.then(() => console.log('Server started in port 4000'));
