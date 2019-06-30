@@ -13,7 +13,7 @@ const resolvers = require('./resolvers');
 const typeDefs = importSchema('./app/user-schema.graphql');
 
 // connection to mongoose.
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_URI, { useCreateIndex: true, useNewUrlParser: true });
 const mongo = mongoose.connection;
 mongo.on('error', (error) => console.log('error is: ', error))
 	.once('open', () => console.log('Connected to database'));

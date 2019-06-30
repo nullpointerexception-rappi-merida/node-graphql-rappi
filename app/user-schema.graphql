@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-        createUser(data: createUserInput!): User!
+    createUser(data: createUserInput!): User!
     login(email: String!, password: String): Auth!
 }
 
@@ -14,20 +14,14 @@ type Auth {
 
 type User {
     _id: ID
-    firstName: String!
-    lastName: String!
     email: String!
-    password: String
-    birthDate: String!
-    profilePicture: String
-    isActive: Boolean!
+    phone: String!
+    password: String!
+    isActive: Boolean
 }
 
 input createUserInput {
-    firstName: String!
-    lastName: String!
     email: String!
+    phone: String!
     password: String!
-    birthDate: String
-    profilePicture: String
 }
