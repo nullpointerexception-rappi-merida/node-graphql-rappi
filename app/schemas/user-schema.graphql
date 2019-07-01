@@ -1,14 +1,3 @@
-directive @auth on FIELD_DEFINITION | FIELD 
-
-type Query {
-    listUsers: [User]! @auth
-}
-
-type Mutation {
-    createUser(data: createUserInput!): User!
-    login(email: String!, password: String): Auth!
-}
-
 type Auth {
     token: String!
     message: String!
@@ -17,7 +6,7 @@ type Auth {
 type User {
     _id: ID
     email: String!
-    phone: String!
+    phone: String
     password: String!
     isActive: Boolean
 }

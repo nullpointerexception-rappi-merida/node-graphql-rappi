@@ -1,10 +1,26 @@
 const UserModel = require('../models/user');
+const DeliveryService = require('../models/delivery');
+const PaymentMethod = require('../models/payment_methods');
+
 
 // eslint-disable-next-line no-unused-vars
 const listUsers = async (root, params, context, info) => {
 	return await UserModel.find();
 };
 
-module.exports = { 
-	listUsers 
+// delivery services queries:
+const listDeliveryServices = async (root, params, context, info) => {
+	return await DeliveryService.find();
+};
+
+// Payment method queries:
+const listPaymentMethods = async (root, params, context, info) => {
+	return await PaymentMethod.find();
+};
+
+
+module.exports = {
+	listUsers,
+	listDeliveryServices,
+	listPaymentMethods
 };

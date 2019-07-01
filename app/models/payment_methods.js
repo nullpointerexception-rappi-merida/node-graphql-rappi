@@ -5,6 +5,6 @@ const PaymentMethods = new Schema({
 	cardNumber: { type: String, required: true },
 	cardHolder: { type: String, required: true },
 	expires: { type: String, required: true },
-}, {collection: 'delivery', timestamps: true});
+}, { collection: 'payment_methods', timestamps: true });
 
-module.exports = mongoose.model('delivery', PaymentMethods);
+module.exports = mongoose.model('payment_methods', PaymentMethods);
