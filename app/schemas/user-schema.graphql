@@ -1,0 +1,18 @@
+type Auth {
+    token: String!
+    message: String!
+}
+
+type User {
+    _id: ID
+    email: String!
+    phone: String
+    password: String!
+    isActive: Boolean
+}
+
+input createUserInput {
+    email: String!
+    phone: String!
+    password: String!
+}

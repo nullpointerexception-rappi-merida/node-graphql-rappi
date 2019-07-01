@@ -1,0 +1,12 @@
+type PaymentMethod {
+    _id: ID
+    cardNumber: String!
+    cardHolder: String!
+    expires: String!
+}
+
+input createPaymentMethodInput {
+    cardNumber: String!
+    cardHolder: String!
+    expires: String!
+}
