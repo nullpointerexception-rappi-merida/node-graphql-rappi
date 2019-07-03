@@ -1,3 +1,4 @@
+scalar Upload
 type Auth {
     token: String!
     message: String!
@@ -15,4 +16,12 @@ input createUserInput {
     email: String!
     phone: String!
     password: String!
+}
+
+input updateProfile {
+    firstName: String
+    lastName: String
+    birthDate: String
+    gender: String
+    profilePicture: Upload
 }

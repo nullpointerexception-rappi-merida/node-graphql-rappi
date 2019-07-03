@@ -5,9 +5,9 @@ const UserProfileSchema = new Schema({
 	firstName: { type: String, required: true },
 	lastName: { type: String, required: true },
 	birthDate: { type: Date },
-	gender: { type: String, enum: ['H', 'M', 'O'] },
+	gender: { type: String, enum: ['F', 'M', 'O'] },
 	profilePicture: { type: String },
-	isActive: { type: Boolean, default: true },
-}, {collection: 'user_profile', timestamps: true});
+	user: { type: Schema.Types.ObjectId, ref: 'users' }
+}, {collection: 'user_profiles', timestamps: true});
 
-module.exports = mongoose.model('user_profile', UserProfileSchema);
+module.exports = mongoose.model('user_profiles', UserProfileSchema);

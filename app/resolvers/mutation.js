@@ -1,6 +1,7 @@
 const UserModel = require('../models/user');
 const DeliveryService = require('../models/delivery');
 const PaymentMethod = require('../models/payment_methods');
+const UserProfile = require('../models/user_profile');
 const authenticate = require('../utils/authenticate');
 
 printAndThrowError = (error, consoleMsg, errorMsg) => {
@@ -23,8 +24,25 @@ const createUser = async (root, params, context, info) => {
 			undefined,
 			'User was not created. ');
 	}
-	return newUser.toObject();
+	// creates an empty profile:
+	const newProfile = await UserProfile.create({
+		firstName: '  ',
+		lastName: '  ',
+		birthDate: '',
+		gender: 'O',
+		profilePicture: '',
+		user: newUser
+	});
+	const userFromDB = await UserModel.findOne({ _id: newUser._id })
+		.catch((error) => {
+			console.log('Error while fetching the user: ', error);
+			throw new Error('Error while fetching the user');
+		});
+	userFromDB.userProfile = newProfile;
+	userFromDB.save({ new: true });
+	return userFromDB.toObject();
 };
+
 
 const login = async (root, params, context, info) => {
 	const token = await authenticate(params)
