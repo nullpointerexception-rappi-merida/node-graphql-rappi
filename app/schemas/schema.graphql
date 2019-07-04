@@ -1,8 +1,9 @@
 directive @auth on FIELD_DEFINITION | FIELD
 
-# import User from "user-schema.graphql"
-# import DeliveryService from "delivery-schema.graphql"
-# import PaymentMethod from "payment-method-schema.graphql"
+#import User from "user-schema.graphql"
+#import DeliveryService from "delivery-schema.graphql"
+#import PaymentMethod from "payment-method-schema.graphql"
+
 type Query {
     listUsers: [User]! @auth
     listDeliveryServices: [DeliveryService]! @auth
@@ -16,10 +17,12 @@ type Mutation {
     # users:
     createUser(data: createUserInput!): User!
     login(email: String!, password: String): Auth!
-
+    deleteProfile:String! @auth
     # delivery service:
     createDeliveryService(data: createDeliveryServiceInput!): DeliveryService! @auth
+    deleteDeliveryService(id:ID): String! @auth
 
     # payment methods:
     createPaymentMethod(data: createPaymentMethodInput!): PaymentMethod! @auth
+    deletePaymenthMethod(id:ID): String! @auth
 }

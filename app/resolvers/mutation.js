@@ -4,7 +4,7 @@ const PaymentMethod = require('../models/payment_methods');
 const UserProfile = require('../models/user_profile');
 const authenticate = require('../utils/authenticate');
 
-printAndThrowError = (error, consoleMsg, errorMsg) => {
+const printAndThrowError = (error, consoleMsg, errorMsg) => {
 	if (error && consoleMsg) {
 		console.log(consoleMsg, error);
 	}
@@ -55,6 +55,24 @@ const login = async (root, params, context, info) => {
 	};
 };
 
+const deleteProfile = async (root,params,context,info) => {
+
+	const {user} = context;
+
+	const profile = await UserModel.findById(user._id)
+		.catch(error=> {
+			printAndThrowError(error,'Error while deleting profile','Error ocurred');
+		});
+	if(!profile) {
+		printAndThrowError(undefined,undefined,'Profile was not found');
+	}
+	profile.isActive = false;
+	await profile.save({ new: true});
+
+	return 'Profile deleted';
+
+};
+
 /***** DELIVERY SERVICE SECTION ******/
 
 const createDeliveryService = async (root, params, context, info) => {
@@ -70,6 +88,16 @@ const createDeliveryService = async (root, params, context, info) => {
 			'delivery service was not created. ');
 	}
 	return newDeliveryService.toObject();
+};
+
+const deleteDeliveryService = async (root,params,context,info) => {
+	const {id} = params;
+	const {user} = context;
+
+	await DeliveryService.findOneAndUpdate({_id:id, user:user._id}, {$set:{isActive:false}});
+
+	return 'Delivery Service Cancelled';
+
 };
 
 /***** PAYMENT METHODS SECTION ******/
@@ -88,9 +116,23 @@ const createPaymentMethod = async (root, params, context, info) => {
 	return newPaymentMethod.toObject();
 };
 
+const deletePaymentMethod = async (root,params,context,info) => {
+	const {id} = params;
+	const {user} = context;
+
+	await PaymentMethod.findOneAndUpdate({_id:id, user:user._id}, {$set:{isActive:false}});
+
+	return 'Payment Method Deleted';
+
+};
+
 module.exports = {
 	createUser,
 	login,
 	createDeliveryService,
-	createPaymentMethod
+	createPaymentMethod,
+	deleteProfile,
+	deleteDeliveryService,
+	deletePaymentMethod
+
 };

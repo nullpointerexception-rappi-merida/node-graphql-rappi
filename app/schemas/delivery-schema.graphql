@@ -4,6 +4,7 @@ type DeliveryService {
     destination: [String!]!
     observations: String
     roundTrip: Boolean
+    isActive: Boolean
 }
 
 input createDeliveryServiceInput {
