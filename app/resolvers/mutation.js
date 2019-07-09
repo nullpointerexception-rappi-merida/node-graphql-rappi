@@ -92,9 +92,8 @@ const createDeliveryService = async (root, params, context, info) => {
 
 const deleteDeliveryService = async (root,params,context,info) => {
 	const {id} = params;
-	const {user} = context;
 
-	await DeliveryService.findOneAndUpdate({_id:id, user:user._id}, {$set:{isActive:false}});
+	await DeliveryService.findOneAndUpdate({_id:id}, {$set:{isActive:false}});
 
 	return 'Delivery Service Cancelled';
 
@@ -118,9 +117,8 @@ const createPaymentMethod = async (root, params, context, info) => {
 
 const deletePaymentMethod = async (root,params,context,info) => {
 	const {id} = params;
-	const {user} = context;
 
-	await PaymentMethod.findOneAndUpdate({_id:id, user:user._id}, {$set:{isActive:false}});
+	await PaymentMethod.findOneAndUpdate({_id:id}, {$set:{isActive:false}});
 
 	return 'Payment Method Deleted';
 
