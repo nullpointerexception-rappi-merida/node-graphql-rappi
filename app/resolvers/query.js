@@ -10,12 +10,12 @@ const listUsers = async (root, params, context, info) => {
 
 // delivery services queries:
 const listDeliveryServices = async (root, params, context, info) => {
-	return await DeliveryService.find();
+	return await DeliveryService.find({ isActive: true });
 };
 
 // Payment method queries:
 const listPaymentMethods = async (root, params, context, info) => {
-	return await PaymentMethod.find();
+	return await PaymentMethod.find({ isActive: true });
 };
 
 
