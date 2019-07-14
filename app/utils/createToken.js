@@ -7,7 +7,7 @@ Date.prototype.addDays = function (days) {
 };
 
 const createToken = ({ _id, email }) => {
-	const exp = new Date().addDays(1).getTime();
+	const exp = new Date().addDays(10).getTime();
 	const payload = {
 		_id,
 		email,
