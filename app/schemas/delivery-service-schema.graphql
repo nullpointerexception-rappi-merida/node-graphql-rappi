@@ -8,7 +8,7 @@ type Point {
 type DeliveryService {
     _id: ID!
     origin: Point!
-    destination: [Point!]!
+    destinations: [Point!]!
     observations: String
     roundTrip: Boolean
     isActive: Boolean
@@ -22,7 +22,7 @@ input PointInput {
 
 input createDeliveryServiceInput {
     origin: PointInput!
-    destination: [PointInput!]!
+    destinations: [PointInput!]!
     observations: String
     roundTrip: Boolean
 }

@@ -79,7 +79,7 @@ const deleteProfile = async (root, params, context, info) => {
 const createDeliveryService = async (root, params, context, info) => {
 	const frontEndData = { ...params.data };
 	delete frontEndData.origin;
-	delete frontEndData.destination;
+	delete frontEndData.destinations;
 	const newDeliveryService = await DeliveryService.create(frontEndData)
 		.catch(error => {
 			printAndThrowError(error,
@@ -101,16 +101,16 @@ const createDeliveryService = async (root, params, context, info) => {
 
 	// will set the destinations with its deliveryService:
 	const destinationData = [];
-	for (const destination of params.data.destination) {
+	for (const destination of params.data.destinations) {
 		destinationData.push({ ...destination, deliveryService: newDeliveryService._id });
 	}
 	// creates the destinations if many:
-	newDeliveryService.destination = await Point.insertMany(destinationData);
+	newDeliveryService.destinations = await Point.insertMany(destinationData);
 	await newDeliveryService.save();
 	return await DeliveryService.findById(newDeliveryService._id)
 		.populate('origin')
 		.populate({
-			path: 'destination',
+			path: 'destinations',
 			model: 'points'
 		});
 };

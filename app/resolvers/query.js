@@ -13,7 +13,7 @@ const listDeliveryServices = async (root, params, context, info) => {
 	return await DeliveryService.find({ isActive: true })
 		.populate('origin')
 		.populate({
-			path: 'destination',
+			path: 'destinations',
 			model: 'points'
 		});
 };
