@@ -7,6 +7,7 @@ directive @auth on FIELD_DEFINITION | FIELD
 type Query {
     listUsers: [User]! @auth
     listDeliveryServices: [DeliveryService]! @auth
+    getDeliveryService(id: ID!): DeliveryService! @auth
     listPaymentMethods: [PaymentMethod]! @auth
 }
 # import createUserInput from "./user-schema.graphql"

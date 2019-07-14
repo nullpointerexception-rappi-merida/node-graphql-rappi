@@ -168,9 +168,7 @@ const updateDeliveryService = async (root, params, context, info) => {
 
 const deleteDeliveryService = async (root, params, context, info) => {
 	const { id } = params;
-
 	await DeliveryService.findOneAndUpdate({ _id: id }, { $set: { isActive: false } });
-
 	return 'Delivery Service Cancelled';
 
 };

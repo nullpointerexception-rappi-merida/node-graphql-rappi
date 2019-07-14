@@ -18,6 +18,19 @@ const listDeliveryServices = async (root, params, context, info) => {
 		});
 };
 
+const getDeliveryService = async (root, params, context, info) => {
+	const { id } = params;
+	return await DeliveryService.findOne({
+			_id: id,
+			isActive: true
+		})
+		.populate('origin')
+		.populate({
+			path: 'destinations',
+			model: 'points'
+		});
+};
+
 // Payment method queries:
 const listPaymentMethods = async (root, params, context, info) => {
 	return await PaymentMethod.find({ isActive: true });
@@ -27,5 +40,6 @@ const listPaymentMethods = async (root, params, context, info) => {
 module.exports = {
 	listUsers,
 	listDeliveryServices,
+	getDeliveryService,
 	listPaymentMethods
 };
