@@ -13,7 +13,7 @@ const { AuthDirective } = require('./resolvers/directives');
 const { verifyToken } = require('./utils/verifyToken');
 
 // our own definitions
-const deliverySchema = importSchema(__dirname + '/schemas/delivery-schema.graphql');
+const deliverySchema = importSchema(__dirname + '/schemas/delivery-service-schema.graphql');
 const paymentMethodSchema = importSchema(__dirname + '/schemas/payment-method-schema.graphql');
 const userSchema = importSchema(__dirname + '/schemas/user-schema.graphql');
 const allSchemas = {
