@@ -1,5 +1,5 @@
 const UserModel = require('../models/user');
-const DeliveryService = require('../models/delivery');
+const DeliveryService = require('../models/delivery-service');
 const PaymentMethod = require('../models/payment_methods');
 
 
@@ -8,19 +8,38 @@ const listUsers = async (root, params, context, info) => {
 	return await UserModel.find();
 };
 
-// delivery services queries:
+// deliveryService services queries:
 const listDeliveryServices = async (root, params, context, info) => {
-	return await DeliveryService.find();
+	return await DeliveryService.find({ isActive: true })
+		.populate('origin')
+		.populate({
+			path: 'destinations',
+			model: 'points'
+		});
+};
+
+const getDeliveryService = async (root, params, context, info) => {
+	const { id } = params;
+	return await DeliveryService.findOne({
+			_id: id,
+			isActive: true
+		})
+		.populate('origin')
+		.populate({
+			path: 'destinations',
+			model: 'points'
+		});
 };
 
 // Payment method queries:
 const listPaymentMethods = async (root, params, context, info) => {
-	return await PaymentMethod.find();
+	return await PaymentMethod.find({ isActive: true });
 };
 
 
 module.exports = {
 	listUsers,
 	listDeliveryServices,
+	getDeliveryService,
 	listPaymentMethods
 };

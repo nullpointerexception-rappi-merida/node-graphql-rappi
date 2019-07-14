@@ -1,8 +1,9 @@
 type PaymentMethod {
-    _id: ID
+    _id: ID!
     cardNumber: String!
     cardHolder: String!
     expires: String!
+    isActive: Boolean
 }
 
 input createPaymentMethodInput {

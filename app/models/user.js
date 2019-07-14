@@ -7,6 +7,7 @@ const UserSchema = new Schema({
 	phone: {type: String, required: true },
 	password: { type: String, required: true },
 	isActive: { type: Boolean, default: true },
+	userProfile: { type: Schema.Types.ObjectId, ref: 'user_profiles' }
 }, {
 	collection: 'users', timestamps: true
 });

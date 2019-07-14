@@ -8,7 +8,6 @@ class AuthDirective extends SchemaDirectiveVisitor {
 		const { resolve = defaultFieldResolver } = field;
 		field.resolve = async function (...args) {
 			const [, , context] = args;
-			/*TODO: check if 'author' instead of user*/
 			if (context.user) {
 				return await resolve.apply(this, args);
 			} else {
