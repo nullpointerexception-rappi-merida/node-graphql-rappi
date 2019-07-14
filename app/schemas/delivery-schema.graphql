@@ -1,13 +1,14 @@
 type Point {
-    latitude: String
-    longitude: String
+    _id: ID
+    latitude: String!
+    longitude: String!
     reference: String
 }
 
 type DeliveryService {
     _id: ID!
-    origin: Point
-    destination: [Point]
+    origin: Point!
+    destination: [Point!]!
     observations: String
     roundTrip: Boolean
     isActive: Boolean

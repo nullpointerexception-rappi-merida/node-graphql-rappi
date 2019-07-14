@@ -104,10 +104,13 @@ const createDeliveryService = async (root, params, context, info) => {
 	// creates the destinations if many:
 	newDeliveryService.destination = await Point.insertMany(destinationData);
 	newDeliveryService.origin = originCreated._id;
-	newDeliveryService.save();
+	await newDeliveryService.save();
 	return await DeliveryService.findById(newDeliveryService._id)
 		.populate('origin')
-		.populate('destination');
+		.populate({
+			path: 'destination',
+			model: 'points'
+		});
 };
 
 const deleteDeliveryService = async (root, params, context, info) => {
