@@ -1,18 +1,18 @@
 directive @auth on FIELD_DEFINITION | FIELD
 
-#import User from "user-schema.graphql"
-#import DeliveryService from "delivery-schema.graphql"
-#import PaymentMethod from "payment-method-schema.graphql"
+#import User from "./user-schema.graphql"
+#import DeliveryService from "./delivery-schema.graphql"
+#import PaymentMethod from "./payment-method-schema.graphql"
 
 type Query {
     listUsers: [User]! @auth
     listDeliveryServices: [DeliveryService]! @auth
     listPaymentMethods: [PaymentMethod]! @auth
 }
-# import createUserInput from "user-schema.graphql"
-# import Auth from "user-schema.graphql"
-# import createDeliveryServiceInput from "delivery-schema.graphql"
-# import createPaymentMethodInput from "payment-method-schema.graphql"
+# import createUserInput from "./user-schema.graphql"
+# import Auth from "./user-schema.graphql"
+# import createDeliveryServiceInput from "./delivery-schema.graphql"
+# import createPaymentMethodInput from "./payment-method-schema.graphql"
 type Mutation {
     # users:
     createUser(data: createUserInput!): User!

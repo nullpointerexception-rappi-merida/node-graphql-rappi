@@ -13,7 +13,13 @@ const { AuthDirective } = require('./resolvers/directives');
 const { verifyToken } = require('./utils/verifyToken');
 
 // our own definitions
-const typeDefs = importSchema('./app/schemas/schema.graphql');
+const deliverySchema = importSchema(__dirname + '/schemas/delivery-schema.graphql');
+const paymentMethodSchema = importSchema(__dirname + '/schemas/payment-method-schema.graphql');
+const userSchema = importSchema(__dirname + '/schemas/user-schema.graphql');
+const allSchemas = {
+	deliverySchema, paymentMethodSchema, userSchema
+};
+const typeDefs = importSchema(__dirname + '/schemas/schema.graphql', allSchemas);
 
 // connection to mongoose.
 mongoose.connect(process.env.MONGO_URI, { useCreateIndex: true, useNewUrlParser: true });
