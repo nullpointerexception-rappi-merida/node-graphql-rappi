@@ -1,5 +1,5 @@
 const UserModel = require('../models/user');
-const DeliveryService = require('../models/delivery');
+const DeliveryService = require('../models/delivery-service');
 const Point = require('../models/point');
 const PaymentMethod = require('../models/payment_methods');
 const UserProfile = require('../models/user_profile');
@@ -83,7 +83,7 @@ const createDeliveryService = async (root, params, context, info) => {
 	const newDeliveryService = await DeliveryService.create(frontEndData)
 		.catch(error => {
 			printAndThrowError(error,
-				'Error while creating the delivery service: ',
+				'Error while creating the deliveryService service: ',
 				'Error occurred');
 		});
 	if (!newDeliveryService) {
@@ -93,17 +93,19 @@ const createDeliveryService = async (root, params, context, info) => {
 	}
 	const originData = {
 		...params.data.origin,
-		delivery: newDeliveryService._id
+		deliveryService: newDeliveryService._id
 	};
 	// creates the origin:
 	const originCreated = await Point.create(originData);
+	newDeliveryService.origin = originCreated._id;
+
+	// will set the destinations with its deliveryService:
 	const destinationData = [];
 	for (const destination of params.data.destination) {
-		destinationData.push({ ...destination, delivery: newDeliveryService._id });
+		destinationData.push({ ...destination, deliveryService: newDeliveryService._id });
 	}
 	// creates the destinations if many:
 	newDeliveryService.destination = await Point.insertMany(destinationData);
-	newDeliveryService.origin = originCreated._id;
 	await newDeliveryService.save();
 	return await DeliveryService.findById(newDeliveryService._id)
 		.populate('origin')

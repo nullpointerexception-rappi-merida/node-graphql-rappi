@@ -1,5 +1,5 @@
 const UserModel = require('../models/user');
-const DeliveryService = require('../models/delivery');
+const DeliveryService = require('../models/delivery-service');
 const PaymentMethod = require('../models/payment_methods');
 
 
@@ -8,7 +8,7 @@ const listUsers = async (root, params, context, info) => {
 	return await UserModel.find();
 };
 
-// delivery services queries:
+// deliveryService services queries:
 const listDeliveryServices = async (root, params, context, info) => {
 	return await DeliveryService.find({ isActive: true })
 		.populate('origin')

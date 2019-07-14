@@ -8,6 +8,6 @@ const DeliverySchema = new Schema({
 	roundTrip: { type: Boolean, default: false },
 	user: { type: Schema.Types.ObjectId, ref: 'users' },
 	isActive: { type: Boolean, default: true },
-}, { collection: 'delivery', timestamps: true });
+}, { collection: 'delivery_services', timestamps: true });
 
-module.exports = mongoose.model('delivery', DeliverySchema);
+module.exports = mongoose.model('delivery_services', DeliverySchema);
