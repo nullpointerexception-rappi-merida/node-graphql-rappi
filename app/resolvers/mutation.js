@@ -138,7 +138,7 @@ const updateDeliveryService = async (root, params, context, info) => {
 	}
 	if (data.origin) {
 		// then we must update the origin
-		await Point.replaceOne({ _id: deliveryServiceFromDB.origin._id }, { ...data.origin });
+		await Point.replaceOne({ _id: deliveryServiceFromDB.origin._id }, { ...data.origin, isOrigin: true });
 	}
 	if (data.destinations) {
 		// then we must delete and add the new destinations
