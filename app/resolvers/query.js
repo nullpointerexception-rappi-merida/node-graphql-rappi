@@ -10,7 +10,9 @@ const listUsers = async (root, params, context, info) => {
 
 // delivery services queries:
 const listDeliveryServices = async (root, params, context, info) => {
-	return await DeliveryService.find({ isActive: true });
+	return await DeliveryService.find()
+		.populate('origin')
+		.populate('destination');
 };
 
 // Payment method queries:

@@ -1,17 +1,27 @@
+type Point {
+    latitude: String
+    longitude: String
+    reference: String
+}
+
 type DeliveryService {
     _id: ID!
-    origin: String!
-    destination: [String!]!
+    origin: Point
+    destination: [Point]
     observations: String
     roundTrip: Boolean
     isActive: Boolean
 }
 
+input PointInput {
+    latitude: String!
+    longitude: String!
+    reference: String
+}
+
 input createDeliveryServiceInput {
-    origin: String!
-    destination: [String!]!
+    origin: PointInput!
+    destination: [PointInput!]!
     observations: String
     roundTrip: Boolean
 }
-
-

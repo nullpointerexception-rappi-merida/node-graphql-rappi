@@ -1,5 +1,6 @@
 const UserModel = require('../models/user');
 const DeliveryService = require('../models/delivery');
+const Point = require('../models/point');
 const PaymentMethod = require('../models/payment_methods');
 const UserProfile = require('../models/user_profile');
 const authenticate = require('../utils/authenticate');
@@ -55,19 +56,19 @@ const login = async (root, params, context, info) => {
 	};
 };
 
-const deleteProfile = async (root,params,context,info) => {
+const deleteProfile = async (root, params, context, info) => {
 
-	const {user} = context;
+	const { user } = context;
 
 	const profile = await UserModel.findById(user._id)
-		.catch(error=> {
-			printAndThrowError(error,'Error while deleting profile','Error ocurred');
+		.catch(error => {
+			printAndThrowError(error, 'Error while deleting profile', 'Error ocurred');
 		});
-	if(!profile) {
-		printAndThrowError(undefined,undefined,'Profile was not found');
+	if (!profile) {
+		printAndThrowError(undefined, undefined, 'Profile was not found');
 	}
 	profile.isActive = false;
-	await profile.save({ new: true});
+	await profile.save({ new: true });
 
 	return 'Profile deleted';
 
@@ -76,7 +77,10 @@ const deleteProfile = async (root,params,context,info) => {
 /***** DELIVERY SERVICE SECTION ******/
 
 const createDeliveryService = async (root, params, context, info) => {
-	const newDeliveryService = await DeliveryService.create(params.data)
+	const frontEndData = { ...params.data };
+	delete frontEndData.origin;
+	delete frontEndData.destination;
+	const newDeliveryService = await DeliveryService.create(frontEndData)
 		.catch(error => {
 			printAndThrowError(error,
 				'Error while creating the delivery service: ',
@@ -87,13 +91,29 @@ const createDeliveryService = async (root, params, context, info) => {
 			undefined,
 			'delivery service was not created. ');
 	}
-	return newDeliveryService.toObject();
+	const originData = {
+		...params.data.origin,
+		delivery: newDeliveryService._id
+	};
+	// creates the origin:
+	const originCreated = await Point.create(originData);
+	const destinationData = [];
+	for (const destination of params.data.destination) {
+		destinationData.push({ ...destination, delivery: newDeliveryService._id });
+	}
+	// creates the destinations if many:
+	newDeliveryService.destination = await Point.insertMany(destinationData);
+	newDeliveryService.origin = originCreated._id;
+	newDeliveryService.save();
+	return await DeliveryService.findById(newDeliveryService._id)
+		.populate('origin')
+		.populate('destination');
 };
 
-const deleteDeliveryService = async (root,params,context,info) => {
-	const {id} = params;
+const deleteDeliveryService = async (root, params, context, info) => {
+	const { id } = params;
 
-	await DeliveryService.findOneAndUpdate({_id:id}, {$set:{isActive:false}});
+	await DeliveryService.findOneAndUpdate({ _id: id }, { $set: { isActive: false } });
 
 	return 'Delivery Service Cancelled';
 
@@ -115,10 +135,10 @@ const createPaymentMethod = async (root, params, context, info) => {
 	return newPaymentMethod.toObject();
 };
 
-const deletePaymentMethod = async (root,params,context,info) => {
-	const {id} = params;
+const deletePaymentMethod = async (root, params, context, info) => {
+	const { id } = params;
 
-	await PaymentMethod.findOneAndUpdate({_id:id}, {$set:{isActive:false}});
+	await PaymentMethod.findOneAndUpdate({ _id: id }, { $set: { isActive: false } });
 
 	return 'Payment Method Deleted';
 
