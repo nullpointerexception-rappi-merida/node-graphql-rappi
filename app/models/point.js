@@ -5,6 +5,7 @@ const Point = new Schema({
 	latitude: { type: String, required: true },
 	longitude: { type: String, required: true },
 	reference: { type: String },
+	isOrigin: { type: Boolean, default: false },
 	deliveryService: { type: Schema.Types.ObjectId, ref: 'delivery_services' }
 }, { collection: 'points', timestamps: true });
 

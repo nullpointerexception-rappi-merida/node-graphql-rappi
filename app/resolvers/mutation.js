@@ -83,7 +83,7 @@ const createDeliveryService = async (root, params, context, info) => {
 	const newDeliveryService = await DeliveryService.create(frontEndData)
 		.catch(error => {
 			printAndThrowError(error,
-				'Error while creating the deliveryService service: ',
+				'Error while creating the delivery service: ',
 				'Error occurred');
 		});
 	if (!newDeliveryService) {
@@ -93,6 +93,7 @@ const createDeliveryService = async (root, params, context, info) => {
 	}
 	const originData = {
 		...params.data.origin,
+		isOrigin: true,
 		deliveryService: newDeliveryService._id
 	};
 	// creates the origin:
@@ -108,6 +109,56 @@ const createDeliveryService = async (root, params, context, info) => {
 	newDeliveryService.destinations = await Point.insertMany(destinationData);
 	await newDeliveryService.save();
 	return await DeliveryService.findById(newDeliveryService._id)
+		.populate('origin')
+		.populate({
+			path: 'destinations',
+			model: 'points'
+		});
+};
+
+const updateDeliveryService = async (root, params, context, info) => {
+	const { id, data } = params;
+
+	const deliveryServiceFromDB = await DeliveryService.findById(id)
+		.populate('origin')
+		.populate({
+			path: 'destinations',
+			model: 'points'
+		})
+		.catch(error => {
+			printAndThrowError(error,
+				'Error while fetching the delivery service: ',
+				'Error occurred');
+		});
+	if (!deliveryServiceFromDB) {
+		printAndThrowError(undefined,
+			undefined,
+			'delivery service was not created. ');
+		return;
+	}
+	if (data.origin) {
+		// then we must update the origin
+		await Point.replaceOne({ _id: deliveryServiceFromDB.origin._id }, { ...data.origin });
+	}
+	if (data.destinations) {
+		// then we must delete and add the new destinations
+		await Point.deleteMany({ deliveryService: deliveryServiceFromDB._id, isOrigin: false });
+		// will set the destinations with its deliveryService:
+		const destinationData = [];
+		for (const destination of data.destinations) {
+			destinationData.push({ ...destination, deliveryService: deliveryServiceFromDB._id });
+		}
+		// creates the destinations if many:
+		deliveryServiceFromDB.destinations = await Point.insertMany(destinationData);
+	}
+	if (data.observations) {
+		deliveryServiceFromDB.observations = data.observations;
+	}
+	if (data.roundTrip !== undefined) {
+		deliveryServiceFromDB.roundTrip = data.roundTrip;
+	}
+	await deliveryServiceFromDB.save();
+	return await DeliveryService.findById(deliveryServiceFromDB._id)
 		.populate('origin')
 		.populate({
 			path: 'destinations',
@@ -152,8 +203,12 @@ const deletePaymentMethod = async (root, params, context, info) => {
 module.exports = {
 	createUser,
 	login,
+
 	createDeliveryService,
 	createPaymentMethod,
+
+	updateDeliveryService,
+
 	deleteProfile,
 	deleteDeliveryService,
 	deletePaymentMethod

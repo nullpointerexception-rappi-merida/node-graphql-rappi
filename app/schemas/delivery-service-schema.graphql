@@ -26,3 +26,10 @@ input createDeliveryServiceInput {
     observations: String
     roundTrip: Boolean
 }
+
+input updateDeliveryServiceInput {
+    origin: PointInput
+    destinations: [PointInput]
+    observations: String
+    roundTrip: Boolean
+}
