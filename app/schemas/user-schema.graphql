@@ -2,6 +2,7 @@ scalar Upload
 type Auth {
     token: String!
     message: String!
+    hasProfile: Boolean
 }
 
 type User {

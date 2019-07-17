@@ -1,4 +1,5 @@
 const UserModel = require('../models/user');
+const UserProfile = require('../models/user_profile');
 const DeliveryService = require('../models/delivery-service');
 const Point = require('../models/point');
 const PaymentMethod = require('../models/payment_methods');
@@ -33,9 +34,13 @@ const login = async (root, params, context, info) => {
 		.catch(e => {
 			throw e;
 		});
+	// let's check if has a profile added:
+	const user = await UserModel.findOne({email: params.email});
+	const profile = await UserProfile.findOne({ user: user._id });
 	return {
 		token,
-		message: 'OK'
+		message: 'OK',
+		hasProfile: !!profile
 	};
 };
 
