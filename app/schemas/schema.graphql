@@ -9,8 +9,10 @@ type Query {
     listDeliveryServices: [DeliveryService]! @auth
     getDeliveryService(id: ID!): DeliveryService! @auth
     listPaymentMethods: [PaymentMethod]! @auth
+    getProfile: UserAndProfile! @auth
 }
 # import createUserInput from "./user-schema.graphql"
+# import createProfileInput from "./user-schema.graphql"
 # import Auth from "./user-schema.graphql"
 # import createDeliveryServiceInput from "./delivery-service-schema.graphql"
 # import updateDeliveryServiceInput from "./delivery-service-schema.graphql"
@@ -19,6 +21,7 @@ type Mutation {
     # users:
     createUser(data: createUserInput!): User!
     login(email: String!, password: String): Auth!
+    addProfile(data: createProfileInput!): String! @auth
     deleteProfile:String! @auth
     # delivery service:
     createDeliveryService(data: createDeliveryServiceInput!): DeliveryService! @auth

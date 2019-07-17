@@ -13,10 +13,34 @@ type User {
     isActive: Boolean
 }
 
+type Profile {
+    _id: ID!
+    firstName: String!
+    lastName: String!
+    birthDate: String!
+    gender: String!
+    profilePicture: Upload
+}
+
+type UserAndProfile {
+    _id: ID
+    email: String!
+    phone: String
+    userProfile: Profile
+}
+
 input createUserInput {
     email: String!
     phone: String!
     password: String!
+}
+
+input createProfileInput {
+    firstName: String!
+    lastName: String!
+    birthDate: String!
+    gender: String!
+    profilePicture: Upload
 }
 
 input updateProfile {

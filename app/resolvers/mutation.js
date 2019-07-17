@@ -35,13 +35,38 @@ const login = async (root, params, context, info) => {
 			throw e;
 		});
 	// let's check if has a profile added:
-	const user = await UserModel.findOne({email: params.email});
+	const user = await UserModel.findOne({ email: params.email });
 	const profile = await UserProfile.findOne({ user: user._id });
 	return {
 		token,
 		message: 'OK',
 		hasProfile: !!profile
 	};
+};
+
+const addProfile = async (root, params, context, info) => {
+	const { user } = context;
+	const profile = {
+		...params.data,
+		user: user._id
+	};
+	const isProfileCreated = await UserProfile.findOne({ user: user._id });
+	if (isProfileCreated) {
+		throw new Error('The user has already a profile');
+	}
+	const profileCreated = await UserProfile.create(profile)
+		.catch(e => {
+			return {
+				errorCode: 500,
+				status: 500,
+				error: 'Could not create the profile',
+				errorMsg: 'Could not create the profile',
+
+			};
+		});
+	// update the user as well.
+	await UserModel.findByIdAndUpdate(user._id, { ...user.toObject(), userProfile: profileCreated._id });
+	return 'Profile created successfully';
 };
 
 const deleteProfile = async (root, params, context, info) => {
@@ -189,6 +214,7 @@ const deletePaymentMethod = async (root, params, context, info) => {
 module.exports = {
 	createUser,
 	login,
+	addProfile,
 
 	createDeliveryService,
 	createPaymentMethod,

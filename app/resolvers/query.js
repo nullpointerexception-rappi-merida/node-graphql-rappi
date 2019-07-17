@@ -31,6 +31,14 @@ const getDeliveryService = async (root, params, context, info) => {
 		});
 };
 
+const getProfile = async (root, params, context, info) => {
+	const { user } = context;
+	const profile = await UserModel.findOne({ _id: user._id })
+		.populate('userProfile');
+	return profile.toObject();
+};
+
+
 // Payment method queries:
 const listPaymentMethods = async (root, params, context, info) => {
 	return await PaymentMethod.find({ isActive: true });
@@ -39,6 +47,7 @@ const listPaymentMethods = async (root, params, context, info) => {
 
 module.exports = {
 	listUsers,
+	getProfile,
 	listDeliveryServices,
 	getDeliveryService,
 	listPaymentMethods
