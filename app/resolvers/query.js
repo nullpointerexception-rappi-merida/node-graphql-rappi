@@ -33,7 +33,7 @@ const getDeliveryService = async (root, params, context, info) => {
 
 const getProfile = async (root, params, context, info) => {
 	const { user } = context;
-	const profile = await UserModel.findOne({ _id: user._id })
+	const profile = await UserModel.findOne({ _id: user._id, isActive: true })
 		.populate('userProfile');
 	return profile.toObject();
 };
