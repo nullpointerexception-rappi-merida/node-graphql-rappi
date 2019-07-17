@@ -31,5 +31,6 @@ type Mutation {
 
     # payment methods:
     createPaymentMethod(data: createPaymentMethodInput!): PaymentMethod! @auth
+    updatePaymentMethod(data: updatePaymentMethodInput!): PaymentMethod! @auth
     deletePaymentMethod(id:ID): String! @auth
 }

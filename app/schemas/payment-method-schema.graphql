@@ -11,3 +11,10 @@ input createPaymentMethodInput {
     cardHolder: String!
     expires: String!
 }
+
+input updatePaymentMethodInput {
+    _id: ID!
+    cardNumber: String!
+    cardHolder: String!
+    expires: String!
+}

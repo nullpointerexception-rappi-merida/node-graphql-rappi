@@ -225,6 +225,27 @@ const createPaymentMethod = async (root, params, context, info) => {
 	return newPaymentMethod.toObject();
 };
 
+const updatePaymentMethod = async (root, params, context, info) => {
+	const paymentData = { ...params.data };
+	delete paymentData._id;
+	await PaymentMethod.findOneAndUpdate(
+		{ _id: params.data._id },
+		{
+			...paymentData,
+		}
+		)
+		.catch(e => {
+			return {
+				errorCode: 500,
+				status: 500,
+				error: 'Could not update the payment method',
+				errorMsg: 'Could not update the payment method',
+
+			};
+		});
+	return await PaymentMethod.findById(params.data._id);
+};
+
 const deletePaymentMethod = async (root, params, context, info) => {
 	const { id } = params;
 
@@ -238,12 +259,13 @@ module.exports = {
 	createUser,
 	login,
 	addProfile,
-	updateProfile,
 
 	createDeliveryService,
 	createPaymentMethod,
 
 	updateDeliveryService,
+	updatePaymentMethod,
+	updateProfile,
 
 	deleteProfile,
 	deleteDeliveryService,
