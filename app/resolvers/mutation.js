@@ -69,6 +69,29 @@ const addProfile = async (root, params, context, info) => {
 	return 'Profile created successfully';
 };
 
+const updateProfile = async (root, params, context, info) => {
+	const { user } = context;
+	const profileFromDB = await UserProfile.findOne({ user: user._id });
+	await UserProfile.findOneAndUpdate(
+		{ user: user._id },
+		{
+			...profileFromDB.toObject(),
+			...params.data
+		}
+		)
+		.catch(e => {
+			return {
+				errorCode: 500,
+				status: 500,
+				error: 'Could not update the profile',
+				errorMsg: 'Could not update the profile',
+
+			};
+		});
+	return UserModel.findOne({ _id: user._id })
+		.populate('userProfile');
+};
+
 const deleteProfile = async (root, params, context, info) => {
 
 	const { user } = context;
@@ -215,6 +238,7 @@ module.exports = {
 	createUser,
 	login,
 	addProfile,
+	updateProfile,
 
 	createDeliveryService,
 	createPaymentMethod,

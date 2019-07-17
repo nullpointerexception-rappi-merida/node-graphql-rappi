@@ -43,7 +43,7 @@ input createProfileInput {
     profilePicture: Upload
 }
 
-input updateProfile {
+input updateProfileInput {
     firstName: String
     lastName: String
     birthDate: String
