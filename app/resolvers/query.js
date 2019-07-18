@@ -1,5 +1,6 @@
 const UserModel = require('../models/user');
 const DeliveryService = require('../models/delivery-service');
+const DeliveryAndUser = require('../models/delivery-and-user');
 const PaymentMethod = require('../models/payment_methods');
 
 
@@ -10,17 +11,31 @@ const listUsers = async (root, params, context, info) => {
 
 // deliveryService services queries:
 const listDeliveryServices = async (root, params, context, info) => {
-	return await DeliveryService.find({ isActive: true })
+	const deliveries = await DeliveryService.find({ isActive: true })
 		.populate('origin')
 		.populate({
 			path: 'destinations',
 			model: 'points'
 		});
+	const deliveriesResponse = [];
+	for (const delivery of deliveries) {
+		const usersOfDelivery = await DeliveryAndUser.findOne({
+				delivery: delivery._id
+			})
+			.populate('customer')
+			.populate('dealer');
+		deliveriesResponse.push({
+			delivery: delivery.toObject(),
+			customer: usersOfDelivery.customer.toObject(),
+			dealer: usersOfDelivery.dealer ? usersOfDelivery.dealer.toObject() : undefined
+		});
+	}
+	return deliveriesResponse;
 };
 
 const getDeliveryService = async (root, params, context, info) => {
 	const { id } = params;
-	return await DeliveryService.findOne({
+	const delivery = await DeliveryService.findOne({
 			_id: id,
 			isActive: true
 		})
@@ -29,6 +44,16 @@ const getDeliveryService = async (root, params, context, info) => {
 			path: 'destinations',
 			model: 'points'
 		});
+	const usersOfDelivery = await DeliveryAndUser.findOne({
+			delivery: delivery._id
+		})
+		.populate('customer')
+		.populate('dealer');
+	return {
+		delivery: delivery.toObject(),
+		customer: usersOfDelivery.customer.toObject(),
+		dealer: usersOfDelivery.dealer ? usersOfDelivery.dealer.toObject() : undefined
+	};
 };
 
 const getProfile = async (root, params, context, info) => {

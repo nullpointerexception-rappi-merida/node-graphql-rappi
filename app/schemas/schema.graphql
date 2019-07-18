@@ -4,10 +4,16 @@ directive @auth on FIELD_DEFINITION | FIELD
 #import DeliveryService from "./delivery-service-schema.graphql"
 #import PaymentMethod from "./payment-method-schema.graphql"
 
+type DeliveryServiceResponse {
+    delivery: DeliveryService!
+    customer: User!
+    dealer: User
+}
+
 type Query {
     listUsers: [User]! @auth
-    listDeliveryServices: [DeliveryService]! @auth
-    getDeliveryService(id: ID!): DeliveryService! @auth
+    listDeliveryServices: [DeliveryServiceResponse]! @auth
+    getDeliveryService(id: ID!): DeliveryServiceResponse! @auth
     listPaymentMethods: [PaymentMethod]! @auth
     getProfile: UserAndProfile! @auth
 }

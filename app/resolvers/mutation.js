@@ -1,6 +1,7 @@
 const UserModel = require('../models/user');
 const UserProfile = require('../models/user_profile');
 const DeliveryService = require('../models/delivery-service');
+const DeliveryAndUser = require('../models/delivery-and-user');
 const Point = require('../models/point');
 const PaymentMethod = require('../models/payment_methods');
 const authenticate = require('../utils/authenticate');
@@ -138,12 +139,18 @@ const createDeliveryService = async (root, params, context, info) => {
 			undefined,
 			'delivery service was not created. ');
 	}
+	// let's link the user in the context with the delivery service created
+	const { user } = context;
+	await DeliveryAndUser.create({
+		delivery: newDeliveryService._id,
+		customer: user._id
+	});
+	// creates the origin point:
 	const originData = {
 		...params.data.origin,
 		isOrigin: true,
 		deliveryService: newDeliveryService._id
 	};
-	// creates the origin:
 	const originCreated = await Point.create(originData);
 	newDeliveryService.origin = originCreated._id;
 
