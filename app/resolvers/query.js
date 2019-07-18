@@ -9,6 +9,31 @@ const listUsers = async (root, params, context, info) => {
 	return await UserModel.find();
 };
 
+const listMyDeliveryServices = async (root, params, context, info) => {
+	const { user } = context;
+	const deliveriesAndUsers = await DeliveryAndUser.find({
+			customer: user._id
+		})
+		.populate('delivery')
+		.populate('dealer');
+	const deliveriesResponse = [];
+	for (const deliveryAndUser of deliveriesAndUsers) {
+		let deliveryResponse = {};
+		deliveryResponse.delivery = await DeliveryService.findById(deliveryAndUser.delivery)
+			.populate('origin')
+			.populate({
+				path: 'destinations',
+				model: 'points'
+			});
+		if (deliveryAndUser.dealer) {
+			deliveryResponse.dealer = await UserModel.findById(deliveryAndUser.dealer);
+		}
+		deliveriesResponse.push(deliveryResponse);
+	}
+	console.log('deliveriesResponse: ', deliveriesResponse);
+	return deliveriesResponse;
+};
+
 // deliveryService services queries:
 const listDeliveryServices = async (root, params, context, info) => {
 	const deliveries = await DeliveryService.find({ isActive: true })
@@ -74,5 +99,6 @@ module.exports = {
 	getProfile,
 	listDeliveryServices,
 	getDeliveryService,
-	listPaymentMethods
+	listPaymentMethods,
+	listMyDeliveryServices
 };

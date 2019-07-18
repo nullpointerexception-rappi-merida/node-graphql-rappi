@@ -10,9 +10,15 @@ type DeliveryServiceResponse {
     dealer: User
 }
 
+type MyDeliveryServicesResponse {
+    delivery: DeliveryService!
+    dealer: User
+}
+
 type Query {
     listUsers: [User]! @auth
     listDeliveryServices: [DeliveryServiceResponse]! @auth
+    listMyDeliveryServices: [MyDeliveryServicesResponse]! @auth
     getDeliveryService(id: ID!): DeliveryServiceResponse! @auth
     listPaymentMethods: [PaymentMethod]! @auth
     getProfile: UserAndProfile! @auth
