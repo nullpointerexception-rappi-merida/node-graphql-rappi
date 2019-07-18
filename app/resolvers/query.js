@@ -10,6 +10,7 @@ const listUsers = async (root, params, context, info) => {
 };
 
 const listMyDeliveryServices = async (root, params, context, info) => {
+	// the user in session should be a customer.
 	const { user } = context;
 	const deliveriesAndUsers = await DeliveryAndUser.find({
 			customer: user._id
@@ -28,6 +29,30 @@ const listMyDeliveryServices = async (root, params, context, info) => {
 		if (deliveryAndUser.dealer) {
 			deliveryResponse.dealer = await UserModel.findById(deliveryAndUser.dealer);
 		}
+		deliveriesResponse.push(deliveryResponse);
+	}
+	return deliveriesResponse;
+};
+
+const listMyDeliveryServicesAsDealer = async (root, params, context, info) => {
+	// the user in session should be a dealer.
+	const { user } = context;
+	const deliveriesAndUsers = await DeliveryAndUser.find({
+			dealer: user._id
+		})
+		.populate('delivery')
+		.populate('customer');
+	const deliveriesResponse = [];
+	for (const deliveryAndUser of deliveriesAndUsers) {
+		let deliveryResponse = {
+			customer: deliveryAndUser.customer.toObject()
+		};
+		deliveryResponse.delivery = await DeliveryService.findById(deliveryAndUser.delivery)
+			.populate('origin')
+			.populate({
+				path: 'destinations',
+				model: 'points'
+			});
 		deliveriesResponse.push(deliveryResponse);
 	}
 	return deliveriesResponse;
@@ -99,5 +124,6 @@ module.exports = {
 	listDeliveryServices,
 	getDeliveryService,
 	listPaymentMethods,
-	listMyDeliveryServices
+	listMyDeliveryServices,
+	listMyDeliveryServicesAsDealer
 };

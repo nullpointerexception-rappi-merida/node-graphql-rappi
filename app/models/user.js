@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
-const USER_TYPES = {
-	customer: 'CUSTOMER',
-	dealer: 'DEALER'
-};
+const USER_TYPES = require('./user-types');
 
 const UserSchema = new Schema({
 	email: { type: String, required: true, unique: true },

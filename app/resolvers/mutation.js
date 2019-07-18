@@ -1,3 +1,5 @@
+const USER_TYPES = require('../models/user-types');
+
 const UserModel = require('../models/user');
 const UserProfile = require('../models/user_profile');
 const DeliveryService = require('../models/delivery-service');
@@ -125,6 +127,10 @@ const deleteProfile = async (root, params, context, info) => {
 /***** DELIVERY SERVICE SECTION ******/
 
 const createDeliveryService = async (root, params, context, info) => {
+	const { user } = context;
+	if (USER_TYPES.customer !== user.type) {
+		throw new Error('The user who is creating the delivery, is not a customer.');
+	}
 	const frontEndData = { ...params.data };
 	delete frontEndData.origin;
 	delete frontEndData.destinations;
@@ -140,7 +146,6 @@ const createDeliveryService = async (root, params, context, info) => {
 			'delivery service was not created. ');
 	}
 	// let's link the user in the context with the delivery service created
-	const { user } = context;
 	await DeliveryAndUser.create({
 		delivery: newDeliveryService._id,
 		customer: user._id
@@ -220,6 +225,19 @@ const updateDeliveryService = async (root, params, context, info) => {
 		});
 };
 
+const acceptDelivery = async (root, params, context, info) => {
+	// the user in session should be our dealer.
+	const { user } = context;
+	if (USER_TYPES.dealer !== user.type) {
+		throw new Error('The user who is accepting the delivery, is not a dealer.');
+	}
+	const deliveryAndUser = await DeliveryAndUser.findOne({ delivery: params.delivery });
+	deliveryAndUser.dealer = user._id;
+	// updates the delivery guy
+	await deliveryAndUser.save();
+	return 'Delivery accepted';
+};
+
 const deleteDeliveryService = async (root, params, context, info) => {
 	const { id } = params;
 	await DeliveryService.findOneAndUpdate({ _id: id }, { $set: { isActive: false } });
@@ -287,6 +305,8 @@ module.exports = {
 
 	deleteProfile,
 	deleteDeliveryService,
-	deletePaymentMethod
+	deletePaymentMethod,
+
+	acceptDelivery
 
 };
