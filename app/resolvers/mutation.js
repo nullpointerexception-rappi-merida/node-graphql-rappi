@@ -46,6 +46,10 @@ const login = async (root, params, context, info) => {
 
 const addProfile = async (root, params, context, info) => {
 	const { user } = context;
+	if (params.data.type) {
+		user.type = params.data.type;
+		delete params.data.type;
+	}
 	const profile = {
 		...params.data,
 		user: user._id
@@ -71,6 +75,13 @@ const addProfile = async (root, params, context, info) => {
 
 const updateProfile = async (root, params, context, info) => {
 	const { user } = context;
+	if (params.data.type) {
+		await UserModel.findByIdAndUpdate(user._id, {
+			...user.toObject(),
+			type: params.data.type
+		});
+		delete params.data.type;
+	}
 	const profileFromDB = await UserProfile.findOne({ user: user._id });
 	await UserProfile.findOneAndUpdate(
 		{ user: user._id },

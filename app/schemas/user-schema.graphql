@@ -5,12 +5,18 @@ type Auth {
     hasProfile: Boolean
 }
 
+enum USER_TYPES {
+    CUSTOMER
+    DEALER
+}
+
 type User {
     _id: ID
     email: String!
     phone: String
     password: String!
     isActive: Boolean
+    type: USER_TYPES!
 }
 
 type Profile {
@@ -26,6 +32,7 @@ type UserAndProfile {
     _id: ID
     email: String!
     phone: String
+    type: USER_TYPES
     userProfile: Profile
 }
 
@@ -41,6 +48,7 @@ input createProfileInput {
     birthDate: String!
     gender: String!
     profilePicture: Upload
+    type: USER_TYPES
 }
 
 input updateProfileInput {
@@ -49,4 +57,5 @@ input updateProfileInput {
     birthDate: String
     gender: String
     profilePicture: Upload
+    type: USER_TYPES
 }
