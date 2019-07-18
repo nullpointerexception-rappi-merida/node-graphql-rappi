@@ -30,7 +30,6 @@ const listMyDeliveryServices = async (root, params, context, info) => {
 		}
 		deliveriesResponse.push(deliveryResponse);
 	}
-	console.log('deliveriesResponse: ', deliveriesResponse);
 	return deliveriesResponse;
 };
 
