@@ -6,11 +6,12 @@ Date.prototype.addDays = function (days) {
 	return date;
 };
 
-const createToken = ({ _id, email }) => {
+const createToken = ({ _id, email, type }) => {
 	const exp = new Date().addDays(10).getTime();
 	const payload = {
 		_id,
 		email,
+		type,
 		exp
 	};
 	return jwt.sign(payload, process.env.SECRET_KEY);
