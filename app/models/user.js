@@ -36,4 +36,3 @@ UserSchema.pre('save', function (next) {
 });
 
 module.exports = mongoose.model('users', UserSchema);
-// module.exports = USER_TYPES;

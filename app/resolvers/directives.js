@@ -1,5 +1,7 @@
 const { SchemaDirectiveVisitor } = require('graphql-tools');
 const { defaultFieldResolver } = require('graphql');
+const USER_TYPES = require('../models/user-types');
+
 
 class AuthDirective extends SchemaDirectiveVisitor {
 
@@ -17,6 +19,40 @@ class AuthDirective extends SchemaDirectiveVisitor {
 	}
 }
 
+class CustomerTypeDirective extends SchemaDirectiveVisitor {
+
+	// eslint-disable-next-line no-unused-vars
+	visitFieldDefinition(field, details) {
+		const { resolve = defaultFieldResolver } = field;
+		field.resolve = async function (...args) {
+			const [, , context] = args;
+			if (USER_TYPES.customer === context.user.type) {
+				return await resolve.apply(this, args);
+			} else {
+				throw new Error('You are not a customer');
+			}
+		};
+	}
+}
+
+class DealerTypeDirective extends SchemaDirectiveVisitor {
+
+	// eslint-disable-next-line no-unused-vars
+	visitFieldDefinition(field, details) {
+		const { resolve = defaultFieldResolver } = field;
+		field.resolve = async function (...args) {
+			const [, , context] = args;
+			if (USER_TYPES.dealer === context.user.type) {
+				return await resolve.apply(this, args);
+			} else {
+				throw new Error('You are not a dealer');
+			}
+		};
+	}
+}
+
 module.exports = {
-	AuthDirective
+	AuthDirective,
+	CustomerTypeDirective,
+	DealerTypeDirective
 };

@@ -82,6 +82,29 @@ const listDeliveryServices = async (root, params, context, info) => {
 	return deliveriesResponse;
 };
 
+const listDeliveryServicesAsDealer = async (root, params, context, info) => {
+	const pendingDeliveries = await DeliveryAndUser.find({ dealer: undefined })
+		.populate('delivery')
+		.populate('customer');
+	if (!pendingDeliveries || pendingDeliveries.length === 0) {
+		return pendingDeliveries;
+	}
+	const response = [];
+	for (const pendingDelivery of pendingDeliveries) {
+		let customResponse = {
+			customer: pendingDelivery.customer
+		};
+		customResponse.delivery = await DeliveryService.findById(pendingDelivery.delivery)
+			.populate('origin')
+			.populate({
+				path: 'destinations',
+				model: 'points'
+			});
+		response.push(customResponse);
+	}
+	return response;
+};
+
 const getDeliveryService = async (root, params, context, info) => {
 	const { id } = params;
 	const delivery = await DeliveryService.findOne({
@@ -125,5 +148,6 @@ module.exports = {
 	getDeliveryService,
 	listPaymentMethods,
 	listMyDeliveryServices,
-	listMyDeliveryServicesAsDealer
+	listMyDeliveryServicesAsDealer,
+	listDeliveryServicesAsDealer
 };

@@ -1,5 +1,3 @@
-const USER_TYPES = require('../models/user-types');
-
 const UserModel = require('../models/user');
 const UserProfile = require('../models/user_profile');
 const DeliveryService = require('../models/delivery-service');
@@ -128,9 +126,6 @@ const deleteProfile = async (root, params, context, info) => {
 
 const createDeliveryService = async (root, params, context, info) => {
 	const { user } = context;
-	if (USER_TYPES.customer !== user.type) {
-		throw new Error('The user who is creating the delivery, is not a customer.');
-	}
 	const frontEndData = { ...params.data };
 	delete frontEndData.origin;
 	delete frontEndData.destinations;
@@ -228,9 +223,6 @@ const updateDeliveryService = async (root, params, context, info) => {
 const acceptDelivery = async (root, params, context, info) => {
 	// the user in session should be our dealer.
 	const { user } = context;
-	if (USER_TYPES.dealer !== user.type) {
-		throw new Error('The user who is accepting the delivery, is not a dealer.');
-	}
 	const deliveryAndUser = await DeliveryAndUser.findOne({ delivery: params.delivery });
 	deliveryAndUser.dealer = user._id;
 	// updates the delivery guy

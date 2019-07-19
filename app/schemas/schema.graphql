@@ -1,4 +1,6 @@
 directive @auth on FIELD_DEFINITION | FIELD
+directive @customer on FIELD_DEFINITION | FIELD
+directive @dealer on FIELD_DEFINITION | FIELD
 
 #import User from "./user-schema.graphql"
 #import DeliveryService from "./delivery-service-schema.graphql"
@@ -19,6 +21,7 @@ type MyDeliveryServicesResponse {
 type Query {
     listUsers: [User]! @auth
     listDeliveryServices: [DeliveryServiceResponse]! @auth
+    listDeliveryServicesAsDealer: [DeliveryServiceResponse]! @auth @dealer
     listMyDeliveryServices: [MyDeliveryServicesResponse]! @auth
     listMyDeliveryServicesAsDealer: [MyDeliveryServicesResponse]! @auth
     getDeliveryService(id: ID!): DeliveryServiceResponse! @auth
@@ -39,10 +42,10 @@ type Mutation {
     updateProfile(data: updateProfileInput!): UserAndProfile! @auth
     deleteProfile:String! @auth
     # delivery service:
-    createDeliveryService(data: createDeliveryServiceInput!): DeliveryService! @auth
+    createDeliveryService(data: createDeliveryServiceInput!): DeliveryService! @auth @customer
     updateDeliveryService(id: ID!, data: updateDeliveryServiceInput!): DeliveryService! @auth
     deleteDeliveryService(id:ID): String! @auth
-    acceptDelivery(delivery: ID!): String! @auth
+    acceptDelivery(delivery: ID!): String! @auth @dealer
 
     # payment methods:
     createPaymentMethod(data: createPaymentMethodInput!): PaymentMethod! @auth

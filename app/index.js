@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const resolvers = require('./resolvers');
 
 //Auth
-const { AuthDirective } = require('./resolvers/directives');
+const { AuthDirective, CustomerTypeDirective, DealerTypeDirective } = require('./resolvers/directives');
 const { verifyToken } = require('./utils/verifyToken');
 
 // our own definitions
@@ -31,7 +31,9 @@ const server = new GraphQLServer({
 	typeDefs,
 	resolvers,
 	schemaDirectives: {
-		auth: AuthDirective
+		auth: AuthDirective,
+		customer: CustomerTypeDirective,
+		dealer: DealerTypeDirective
 	},
 	context: async ({ request }) => verifyToken(request)
 });
